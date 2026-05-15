@@ -3,51 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WekaDemo Python — Classification Dashboard</title>
+  <title>WekaDemo Python — ML Dashboard</title>
   <link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
+<div class="app-bg"></div>
 <div class="app">
   <main class="main">
-    <header class="main-header">
+    <header class="main-header glass">
       <div>
-        <h1 class="page-title">WekaDemo (Python Version)</h1>
-        <p class="page-subtitle">Migración de Java a Python con Scikit-Learn</p>
+        <h1 class="page-title">WekaDemo (Python)</h1>
+        <p class="page-subtitle">FastAPI + Scikit-Learn • Clasificación, Regresión y Clustering</p>
       </div>
+      <div class="status-dot"><span></span>Ready</div>
     </header>
 
-    <div class="stats-row">
-      <div class="stat-card">
+    <section class="stats-row">
+      <article class="stat-card glass">
         <div class="stat-label">Dataset</div>
         <div class="stat-value" id="stat-dataset">No dataset</div>
-      </div>
-      <div class="stat-card">
+      </article>
+      <article class="stat-card glass">
         <div class="stat-label">Instances</div>
         <div class="stat-value" id="stat-instances">—</div>
-      </div>
-      <div class="stat-card">
+      </article>
+      <article class="stat-card glass">
         <div class="stat-label">Attributes</div>
         <div class="stat-value" id="stat-attributes">—</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Accuracy</div>
+      </article>
+      <article class="stat-card glass">
+        <div class="stat-label">Score</div>
         <div class="stat-value" id="stat-accuracy">—</div>
-        <div id="stat-accuracy-badge" class="stat-badge"></div>
-      </div>
-    </div>
+      </article>
+    </section>
 
-    <div class="content-grid">
+    <section class="content-grid">
       <div class="left-panel">
-        <div class="card">
+        <article class="card glass">
           <div class="card-header">
             <h2 class="card-title">Upload Dataset</h2>
-            <p class="card-subtitle">Support .csv files</p>
+            <p class="card-subtitle">Support .csv and .arff</p>
           </div>
           <div class="drop-zone" id="drop-zone">
             <div class="drop-icon">⬆</div>
-            <p class="drop-text">Drop your CSV here</p>
+            <p class="drop-text">Drop your file here</p>
             <button class="btn btn-secondary" type="button" onclick="document.getElementById('file-input').click()">Browse File</button>
-            <input type="file" id="file-input" accept=".csv" style="display:none" />
+            <input type="file" id="file-input" accept=".csv,.arff" style="display:none" />
           </div>
           <div id="file-info" class="file-info" style="display:none">
             <div class="file-icon">📄</div>
@@ -57,9 +58,9 @@
             </div>
             <button class="btn-icon" type="button" title="Remove file" onclick="clearFile()">✕</button>
           </div>
-        </div>
+        </article>
 
-        <div class="card">
+        <article class="card glass">
           <div class="card-header">
             <h2 class="card-title">Select Algorithm</h2>
           </div>
@@ -67,9 +68,9 @@
             <div class="algorithm-skeleton"></div>
             <div class="algorithm-skeleton"></div>
           </div>
-        </div>
+        </article>
 
-        <div class="card">
+        <article class="card glass">
           <div class="card-header">
             <h2 class="card-title">Evaluation Settings</h2>
           </div>
@@ -89,18 +90,18 @@
               <label class="form-label">Train %</label>
               <input type="number" id="train-percent" class="form-input" value="66" min="1" max="99" />
             </div>
-            <button class="btn btn-primary" id="run-btn" type="button" onclick="runClassification()">▶ Run Python Model</button>
+            <button class="btn btn-primary" id="run-btn" type="button" onclick="runClassification()">▶ Run Model</button>
           </div>
-        </div>
+        </article>
       </div>
 
       <div class="right-panel">
-        <div id="results-empty" class="card results-empty">
+        <article id="results-empty" class="card glass results-empty">
           <div class="empty-icon">📊</div>
           <p>Ready to analyze with Scikit-Learn</p>
-        </div>
-        <div id="results-panel" style="display:none">
-          <div class="card">
+        </article>
+        <section id="results-panel" style="display:none">
+          <article class="card glass">
             <div class="card-header card-header--row">
               <h2 class="card-title">Model Performance</h2>
               <span id="result-algorithm-badge" class="algorithm-badge"></span>
@@ -113,32 +114,32 @@
                 </svg>
                 <div class="accuracy-text">
                   <div id="accuracy-value">0%</div>
-                  <div class="accuracy-label">Accuracy</div>
+                  <div class="accuracy-label">Main score</div>
                 </div>
               </div>
-              <div class="accuracy-details">
-                <div class="detail-row"><span>Kappa</span><span id="detail-kappa">—</span></div>
-                <div class="detail-row"><span>Method</span><span id="detail-evaluation">—</span></div>
-              </div>
+              <div class="accuracy-details" id="summary-metrics"></div>
             </div>
-          </div>
-          <div class="card">
+          </article>
+          <article class="card glass" id="classification-card">
             <h2 class="card-title">Confusion Matrix</h2>
             <div id="confusion-matrix-container" class="confusion-matrix-container"></div>
-          </div>
-          <div class="card">
-            <h2 class="card-title">Per-Class Metrics</h2>
+          </article>
+          <article class="card glass">
+            <h2 class="card-title">Detailed Metrics</h2>
             <div id="metrics-table-container"></div>
-          </div>
-        </div>
+          </article>
+        </section>
       </div>
-    </div>
+    </section>
   </main>
 </div>
+
+<div id="toast-container" class="toast-container"></div>
 <div id="loading-overlay" class="loading-overlay" style="display:none">
   <div class="loading-spinner"></div>
-  <p>Processing in Python...</p>
+  <p id="loading-text">Processing model...</p>
 </div>
+
 <script src="js/app.js"></script>
 </body>
 </html>
